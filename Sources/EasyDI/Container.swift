@@ -15,6 +15,8 @@ public final class Container {
   private var _factoryAliases = [String : String]()
   private var _weakSingletonObjects = NSMapTable<NSString, AnyObject>(keyOptions: .strongMemory, valueOptions: .weakMemory)
   
+  public init() {}
+  
   // TODO: Add method implements which could call declarative style - container.register(factory: { TestClass() }).implements(ProtocolA.self)
   
   // MARK: - Registration
