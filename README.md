@@ -31,6 +31,9 @@ container.object(TestClass.self, implements: ProtocolA.self)
 let object: ProtocolA = try! container.resolve()
 ```
 
+### Log DI Operations
+Log for all DI operations can be on/off by `EasyDI.consoleLogDiOperations = false` true by default.
+
 ## Installation
 EasyDI available via Swift Package Manager by url [https://github.com/bigMOTOR/EasyDI.git](https://github.com/bigMOTOR/EasyDI.git)
 
