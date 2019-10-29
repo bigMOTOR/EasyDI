@@ -22,9 +22,9 @@ struct DILogger {
     }
   }
   
-  static func log(operation: Operation, for type: Any.Type, scope: Scope? = nil) {
+  static func log(operation: Operation, for type: Any.Type, scope: Scope? = nil, comment: String = "") {
     guard EasyDI.consoleLogDiOperations else { return }
     let scopePart = scope.flatMap { " with scope: \($0)." } ?? "."
-    print("\(operation.description): object for type: \(String(describing: type))\(scopePart)")
+    print("\(operation.description): object for type: \(String(describing: type))\(scopePart) \(comment)")
   }
 }

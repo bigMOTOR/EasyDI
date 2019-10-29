@@ -11,6 +11,7 @@ public enum DIError: Error {
   case cannotCast(object: Any, type: Any.Type)
   case noRegisteredObjectFor(type: Any.Type)
   case noRegisteredObject(desc: String)
+  case cannotPerformFactory(type: Any.Type)
 }
 
 extension DIError: ErrorLocalizedDescription {
@@ -22,6 +23,8 @@ extension DIError: ErrorLocalizedDescription {
       return "Cannot find registered object for type: \(String(describing: type))"
     case .noRegisteredObject(let desc):
       return "Cannot find registered object for type: \(desc)"
+    case .cannotPerformFactory(let type):
+      return "Cannot perform factory to create object with type: \(String(describing: type))"
     }
   }
 }
