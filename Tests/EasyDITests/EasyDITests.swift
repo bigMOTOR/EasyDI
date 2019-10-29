@@ -16,7 +16,7 @@ final class EasyDITests: XCTestCase {
   }
   
   func testRegisterAndResolveObject() {
-    container.register(factory: { TestClass() })
+    container.register { TestClass() }
     container.object(TestClass.self, implements: ProtocolA.self)
     let object: ProtocolA = try! container.resolve()
     XCTAssertTrue(object is TestClass)
@@ -24,7 +24,7 @@ final class EasyDITests: XCTestCase {
   }
   
   func testRegisterAndResolveObjectForConcatenateType() {
-    container.register(factory: { TestClass() })
+    container.register { TestClass() }
     container.object(TestClass.self, implements: ProtocolA.self)
     container.object(TestClass.self, implements: ProtocolB.self)
     let object: ProtocolA & ProtocolB = try! container.resolve()
@@ -34,7 +34,7 @@ final class EasyDITests: XCTestCase {
   }
   
   func testUniqueScope() {
-    container.register(factory: { TestClass() })
+    container.register { TestClass() }
     let object1: TestClass = try! container.resolve()
     object1.someValue = _helloWorld + _helloWorld
     let object2: TestClass = try! container.resolve()
@@ -44,7 +44,7 @@ final class EasyDITests: XCTestCase {
   }
   
   func testWeakSingletonScope() {
-    container.register(factory: { TestClass() }, scope: .weakSingleton)
+    container.register(scope: .weakSingleton) { TestClass() }
     container.object(TestClass.self, implements: ProtocolA.self)
     let object1: TestClass = try! container.resolve()
     object1.someValue = _helloWorld + _helloWorld
@@ -54,11 +54,36 @@ final class EasyDITests: XCTestCase {
     XCTAssertTrue(object1 === object2)
   }
   
+  func testWeakSingletonReleasedAfterLastReferenceGone() {
+    container.register(scope: .weakSingleton) { TestClass() }
+    container.object(TestClass.self, implements: ProtocolA.self)
+    var object1: TestClass? = .some(try! container.resolve())
+    let someValue = _helloWorld + _helloWorld
+    object1?.someValue = someValue
+    object1 = nil
+    let object2: TestClass = try! container.resolve()
+    XCTAssertNotEqual(object2.someValue, someValue)
+  }
+  
+  func testResolveWithConstructor() {
+    class ClassWithConstructor {
+      let some: TestClass
+      init(some: TestClass) {
+        self.some = some
+      }
+    }
+    
+    container.register { TestClass() }
+    try! container.registerConstructor { ClassWithConstructor(some: $0) }
+  }
+    
   static var allTests = [
     ("testRegisterAndResolveObject", testRegisterAndResolveObject),
     ("testRegisterAndResolveObjectForConcatenateType", testRegisterAndResolveObjectForConcatenateType),
     ("testUniqueScope", testUniqueScope),
-    ("testWeakSingletonScope", testWeakSingletonScope)
+    ("testWeakSingletonScope", testWeakSingletonScope),
+    ("testWeakSingletonReleasedAfterLastReferenceGone", testWeakSingletonReleasedAfterLastReferenceGone),
+    ("testResolveWithConstructor", testResolveWithConstructor)
   ]
 }
 
