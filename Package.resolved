@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SLogger",
+        "repositoryURL": "https://github.com/bigMOTOR/SLogger.git",
+        "state": {
+          "branch": null,
+          "revision": "c60320e219dcc456479bb3c304434fcd42f7b460",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
