@@ -1,7 +1,9 @@
 # EasyDI
 
-EasyDI - Dependency Injection,  simple as a railroad. 
+EasyDI - Dependency Injection,  simple as a railroad.
+ 
 Digging deeper into SwiftUI I realized that I don't need all these difficulties which current Dependency Injection frameworks bring to you (all this resolving by tag from Storyboard, etc.) I decided to make it simple for my own needs and bring it to my pet-projects as experiment.
+
 But welcome to join if you need something like that. 🙃
 
 ## Getting Started
@@ -11,7 +13,9 @@ But welcome to join if you need something like that. 🙃
 
 <details>
 <summary>Supported Scopes</summary>
+  
 * unique - resolve your type as a new instance every time you call resolve;
+  
 * weakSingleton - container stores week reference to the resolved instance. While a strong reference to the resolved instance exists resolve will return the same instance. After the resolved instance is deallocated next resolve will produce a new instance.
 </details>
 
