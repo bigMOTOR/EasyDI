@@ -76,6 +76,14 @@ final class EasyDITests: XCTestCase {
     container.register { TestClass() }
     try! container.registerConstructor { ClassWithConstructor(some: $0) }
   }
+  
+  func testResolveOptionals() {
+    container.register { TestClass() }
+    container.object(TestClass.self, implements: ProtocolA.self)
+    let object: ProtocolA? = try! container.resolve()
+    XCTAssertTrue(object is TestClass)
+    XCTAssertEqual(object?.someValue, _helloWorld)
+  }
     
   static var allTests = [
     ("testRegisterAndResolveObject", testRegisterAndResolveObject),
