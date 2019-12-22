@@ -81,7 +81,15 @@ public final class Container {
   }
   
   private func _findFactory(for type: Any.Type) throws -> FactoryWithScope? {
-    let typeKey = String(describing: type)
+    let typeKey: String = {
+      switch wrappedTypeFromOptionalType(type) {
+      case .none:
+        return String(describing: type)
+      case .some(let wrappedType):
+        return String(describing: wrappedType)
+      }
+    }()
+  
     if let object = _objectFactories[typeKey] {
       return object
     }
