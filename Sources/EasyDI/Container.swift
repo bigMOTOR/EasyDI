@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SLogger
 
 private typealias FactoryWithScope = (factory: ()throws->Any, scope: Scope)
 
@@ -26,7 +25,7 @@ public final class Container {
     
     switch !(T.self is AnyClass) && scope == .weakSingleton {
     case true:
-      SLogger.warning("weakSingleton scope works only for classes! Scope will be \(Scope.unique)!")
+      print("⚠️ Warning: weakSingleton scope works only for classes! Scope will be \(Scope.unique)!")
       _objectFactories[key] = (factory, .unique)
     case false:
       _objectFactories[key] = (factory, scope)
