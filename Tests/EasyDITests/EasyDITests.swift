@@ -84,6 +84,37 @@ final class EasyDITests: XCTestCase {
     XCTAssertTrue(object is TestClass)
     XCTAssertEqual(object?.someValue, _helloWorld)
   }
+  
+  func testResolveWithTwoResolvesInInit() {
+    class ClassA {
+      let someValue: String = "Hello, World!"
+    }
+
+    class ClassB {
+      let someValue: Int = 69
+    }
+
+    class ClassInitWithAB {
+      let a: ClassA
+      let b: ClassB
+      
+      init(a: ClassA, b: ClassB) {
+        self.a = a
+        self.b = b
+      }
+    }
+    
+    container.register(scope: .weakSingleton) { ClassA() }
+    container.register(scope: .weakSingleton) { ClassB() }
+    
+    container.register { [unowned self] in
+      ClassInitWithAB(a: try! self.container.resolve() as ClassA, b: try! self.container.resolve())
+    }
+    
+    let classInitWithAB: ClassInitWithAB = try! container.resolve()
+    XCTAssertEqual(classInitWithAB.a.someValue, "Hello, World!")
+    XCTAssertEqual(classInitWithAB.b.someValue, 69)
+  }
     
   static var allTests = [
     ("testRegisterAndResolveObject", testRegisterAndResolveObject),
@@ -91,7 +122,9 @@ final class EasyDITests: XCTestCase {
     ("testUniqueScope", testUniqueScope),
     ("testWeakSingletonScope", testWeakSingletonScope),
     ("testWeakSingletonReleasedAfterLastReferenceGone", testWeakSingletonReleasedAfterLastReferenceGone),
-    ("testResolveWithConstructor", testResolveWithConstructor)
+    ("testResolveWithConstructor", testResolveWithConstructor),
+    ("testResolveOptionals", testResolveOptionals),
+    ("testResolveWithTwoResolvesInInit", testResolveWithTwoResolvesInInit)
   ]
 }
 

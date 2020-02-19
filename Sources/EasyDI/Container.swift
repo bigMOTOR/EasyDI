@@ -57,7 +57,7 @@ public final class Container {
         case .unique:
         return try factoryWithScope.factory()
       case .weakSingleton:
-        return try _resolveWeakSingleton(factory: factoryWithScope.factory)
+        return try _resolveWeakSingleton(for: T.self, factory: factoryWithScope.factory)
       }
     }(resolveProspect)
     
@@ -66,12 +66,11 @@ public final class Container {
   }
   
    // MARK: - Private Methods
-  private func _resolveWeakSingleton<T>(factory: ()throws->T) throws -> T {
-    let typeKey = String(describing: T.self) as NSString
+  private func _resolveWeakSingleton(for object: Any.Type, factory: ()throws->Any) throws -> Any {
+    let typeKey = String(describing: object.self) as NSString
 
     if let resolvedObject = _weakSingletonObjects.object(forKey: typeKey) {
-      guard let object = resolvedObject as? T else { throw DIError.cannotCast(object: resolvedObject, type: T.self) }
-      return object
+      return resolvedObject
     } else {
       let object = try factory()
       _weakSingletonObjects.setObject(object as AnyObject, forKey: typeKey)
